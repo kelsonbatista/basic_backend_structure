@@ -1,0 +1,5 @@
+.eslintrc.json
+tests/**/*.ts
+node_modules
+build
+.env
