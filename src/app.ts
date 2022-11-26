@@ -1,5 +1,7 @@
+import cors from "cors";
 import express from "express";
 import { StatusCodes } from "http-status-codes";
+import corsOptions from "./config/corsOptions";
 
 class App {
   public app: express.Express;
@@ -24,6 +26,7 @@ class App {
       res.status(StatusCodes.OK).send("pong");
     });
 
+    this.app.use(cors(corsOptions));
     this.app.use(express.json());
 
     this.app.listen(PORT, () => console.log(`Server running at port ${PORT}`));
