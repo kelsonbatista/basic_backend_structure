@@ -1,25 +1,47 @@
-version: "3"
+version: "3.7"
+
+networks:
+  net:
+    driver: bridge
+
 services:
   backend:
+    container_name: backend
     build: ./
     ports:
       - "3001:3001"
-    working_dir: /app
+    working_dir: /app/src
     volumes:
       - ./src:/app
+    networks:
+      - net
+    links:
+      - db
+    restart: always
     depends_on:
       db:
         condition: service_healthy
+
   db:
-    image: postgres:11.1
+    image: postgres:latest
+    container_name: database
     ports:
-      - "5400:5432"
+      - "5432:5432"
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
       POSTGRES_DB: postgres
+    volumes:
+      - ./data-postgres:/var/lib/postgresql/data
+    networks:
+      - net
+    restart: always
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "admin"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+volumes:
+  data:
+    driver: local
