@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 import { StatusCodes } from "http-status-codes";
 import corsOptions from "./config/corsOptions";
+import { router } from "./routes";
 
 class App {
   public app: express.Express;
@@ -25,14 +26,15 @@ class App {
   }
 
   public start(PORT: string | number): void {
-    this.app.get("/ping", (req, res) => {
+    this.app.get("/ping", (_req, res) => {
       res.status(StatusCodes.OK).send("pong");
     });
 
     this.app.use(cors(corsOptions));
     this.app.use(express.json());
+    this.app.use(router);
 
-    this.app.listen(PORT, () => console.log(`Server running at port ${PORT}`));
+    this.app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   }
 }
 
